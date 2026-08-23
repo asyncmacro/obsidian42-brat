@@ -32,7 +32,7 @@ On `beta`, the same rules apply, but releases are published as prereleases. In p
 
 ## Major releases in practice
 
-A major release means we made a breaking change for plugin users or plugin developers. That includes things like removing behavior people rely on, changing configuration format in a non-backward-compatible way, or dropping support for an older Obsidian baseline.
+A major release means we made a breaking change for plugin users or plugin developers. That includes things like removing behavior people rely on, changing configuration format in a non-backward-compatible way, or dropping support for an older Obsidian baseline
 
 Versioning follows semver:
 
