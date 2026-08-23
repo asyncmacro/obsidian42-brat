@@ -1,9 +1,4 @@
-import {
-	type GitHubTokenInfo,
-	TokenErrorType,
-	type TokenValidationError,
-	validateGitHubToken,
-} from "../features/githubUtils";
+import { type GitHubTokenInfo, TokenErrorType, type TokenValidationError, validateGitHubToken } from "../features/githubUtils";
 
 export class TokenValidator {
 	private statusEl?: HTMLElement | null;
@@ -69,9 +64,7 @@ export class TokenValidator {
 
 		if (patInfo.expirationDate) {
 			const expires = new Date(patInfo.expirationDate);
-			const daysLeft = Math.ceil(
-				(expires.getTime() - Date.now()) / (1000 * 60 * 60 * 24),
-			);
+			const daysLeft = Math.ceil((expires.getTime() - Date.now()) / (1000 * 60 * 60 * 24));
 
 			if (daysLeft < 7) {
 				details.createDiv({

@@ -8,6 +8,18 @@ The **Beta Reviewers Auto-update Tool** or **BRAT** for short is a plugin that m
 
 Simply add the GitHub repository path for the beta Obsidian plugin to the list for testing and now you can just check for updates. Updates are downloaded and the plugin is reloaded. No more having to create folders, download files, copy them to the right place, and so on. This plugin takes care of all that for you.
 
+## ✨ New Features
+
+### Monorepo Support
+BRAT now supports installing plugins directly from local monorepo structures!
+
+- Install plugins from local paths (`./packages/my-plugin`)
+- Automatic manifest generation from `package.json`
+- Shared package detection and tracking
+- Conflict resolution for shared dependencies
+
+Enable in settings: **Monorepo Support** toggle
+
 Learn more about BRAT in the DOCUMENTATION found at: https://tfthacker.com/BRAT or follow me at https://twitter.com/tfthacker for updates.
 
 You might also be interested in a few products I have made for Obsidian:

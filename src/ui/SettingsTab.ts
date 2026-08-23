@@ -192,6 +192,52 @@ export class BratSettingsTab extends PluginSettingTab {
 				});
 			});
 
+		new Setting(containerEl)
+			.setName("Enable Monorepo Support")
+			.setDesc("Enable support for installing plugins from local monorepo paths")
+			.addToggle((cb: ToggleComponent) => {
+				cb.setValue(this.plugin.settings.monorepoEnabled).onChange(async (value: boolean) => {
+					this.plugin.settings.monorepoEnabled = value;
+					await this.plugin.saveSettings();
+				});
+			});
+
+		new Setting(containerEl)
+			.setName("Monorepo Base Path")
+			.setDesc("Base path for relative monorepo paths (optional)")
+			.addText((cb) => {
+				cb.setValue(this.plugin.settings.monorepoBasePath).onChange(async (value: string) => {
+					this.plugin.settings.monorepoBasePath = value;
+					await this.plugin.saveSettings();
+				});
+			});
+
+		// Shared Packages Display
+		const sharedPackageGroup = new SettingGroup(containerEl).setHeading("Shared Packages");
+
+		if (this.plugin.settings.sharedPackages.length === 0) {
+			sharedPackageGroup.addSetting((setting) => {
+				setting.setName("No shared packages detected").setDesc("Shared packages will appear here when plugins from monorepos are added.");
+			});
+		} else {
+			for (const pkg of this.plugin.settings.sharedPackages) {
+				sharedPackageGroup.addSetting((setting) => {
+					setting.setName(`${pkg.name}@${pkg.version}`);
+					setting.setDesc(`Path: ${pkg.path}\nUsed by: ${pkg.usedBy.join(", ")}`);
+					setting.addButton((btn) => {
+						btn
+							.setIcon("trash")
+							.setTooltip("Remove shared package")
+							.onClick(async () => {
+								this.plugin.settings.sharedPackages = this.plugin.settings.sharedPackages.filter((p) => p.name !== pkg.name);
+								await this.plugin.saveSettings();
+								this.display();
+							});
+					});
+				});
+			}
+		}
+
 		const frozenVersions = new Map(this.plugin.settings.pluginSubListFrozenVersion.map((f) => [f.repo, f]));
 		const pluginContainers = new Map<string, { container: HTMLElement; pluginName: string }>();
 

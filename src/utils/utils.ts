@@ -1,7 +1,4 @@
-export function createGitHubResourceLink(
-	githubResource: string,
-	optionalText?: string,
-): DocumentFragment {
+export function createGitHubResourceLink(githubResource: string, optionalText?: string): DocumentFragment {
 	const newLink = new DocumentFragment();
 	// eslint-disable-next-line obsidianmd/prefer-active-doc -- BRAT compatibility: activeDocument breaks utility rendering call sites
 	const linkElement = document.createElement("a");

@@ -198,7 +198,11 @@ export default class AddNewPluginModal extends Modal {
 					setting.addText((addressEl) => {
 						this.repositoryAddressEl = addressEl;
 
-						addressEl.setPlaceholder(text.repository.placeholder);
+						// Show different placeholder for monorepo support
+						const placeholder = this.plugin.settings.monorepoEnabled
+							? `${text.repository.placeholder} or local path (./path/to/plugin)`
+							: text.repository.placeholder;
+						addressEl.setPlaceholder(placeholder);
 						addressEl.setValue(this.address);
 						addressEl.onChange((value) => {
 							this.address = scrubRepositoryUrl(value.trim());
@@ -424,6 +428,36 @@ export default class AddNewPluginModal extends Modal {
 			return;
 		}
 
+		// Check for local monorepo path
+		const isLocalPath = this.address.startsWith("./") || this.address.startsWith("../") || this.address.startsWith("file://");
+		if (isLocalPath && this.plugin.settings.monorepoEnabled) {
+			// Validate local monorepo path
+			try {
+				const isValid = await this.betaPlugins.isLikelyMonorepo(this.address);
+				if (isValid) {
+					validateInputEl?.inputEl.classList.remove("invalid-repository");
+					validateInputEl?.inputEl.classList.add("valid-repository");
+					validationStatusEl?.setText("Local monorepo path detected");
+					// Hide version dropdown for local paths
+					if (this.versionSetting) {
+						this.versionSetting.setDisabled(true);
+						this.versionSetting.settingEl.classList.add("disabled-setting");
+					}
+					return;
+				} else {
+					validateInputEl?.inputEl.classList.add("invalid-repository");
+					validationStatusEl?.setText("Invalid local path - check monorepo structure");
+					validationStatusEl?.addClass("validation-status-error");
+					return;
+				}
+			} catch {
+				validateInputEl?.inputEl.classList.add("invalid-repository");
+				validationStatusEl?.setText("Could not validate local path");
+				validationStatusEl?.addClass("validation-status-error");
+				return;
+			}
+		}
+
 		validationStatusEl?.setText(text.repository.validating);
 		validationStatusEl?.removeClass("validation-status-error");
 
@@ -432,6 +466,15 @@ export default class AddNewPluginModal extends Modal {
 			this.updateVersionDropdown(this.versionSetting, []);
 		}
 		const scrubbedAddress = scrubRepositoryUrl(this.address);
+
+		// Skip GitHub API for local paths
+		if (isLocalPath && this.plugin.settings.monorepoEnabled) {
+			// Local paths don't need version validation
+			validateInputEl?.inputEl.classList.remove("invalid-repository");
+			validateInputEl?.inputEl.classList.add("valid-repository");
+			validationStatusEl?.setText("Local monorepo path validated");
+			return;
+		}
 
 		try {
 			// Get the actual token value from SecretStorage
@@ -525,6 +568,14 @@ export default class AddNewPluginModal extends Modal {
 	}
 
 	private isGitHubRepositoryMatch(address: string): boolean {
+		// Check for local monorepo path first
+		if (this.plugin.settings.monorepoEnabled) {
+			const isLocalPath = address.startsWith("./") || address.startsWith("../") || address.startsWith("file://");
+			if (isLocalPath) {
+				return true;
+			}
+		}
+
 		// Remove trailing .git if present
 		const cleanAddress = address
 			.trim()
