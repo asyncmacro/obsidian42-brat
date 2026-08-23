@@ -137,4 +137,95 @@ Use this list to manage beta themes tracked by BRAT.
 
 > [!NOTE]
 > Removing a plugin or theme from BRAT tracking does not uninstall it from your vault.
+
+## Monorepo Support
+
+BRAT now supports installing plugins from local monorepo structures within your Obsidian vault.
+
+### Enabling Monorepo Support
+
+1. Open BRAT settings
+2. Enable **Monorepo Support** toggle
+3. Optionally set **Monorepo Base Path** for relative paths (e.g., `./monorepo`)
+
+### Adding Plugins from Monorepos
+
+Instead of GitHub repository paths, you can now use local paths:
+
+- **Relative path**: `./packages/my-plugin`
+- **Parent path**: `../my-monorepo/packages/my-plugin`
+- **Absolute path**: `file:///path/to/monorepo/packages/my-plugin`
+
+### Monorepo Structure Requirements
+
+A plugin in a monorepo must contain:
+
+1. `main.js` - The plugin's main JavaScript file
+2. Either:
+   - `manifest.json` - Standard Obsidian plugin manifest, OR
+   - `package.json` - Will be used to generate manifest dynamically
+
+### Dynamic Manifest Generation
+
+If `manifest.json` is missing, BRAT will generate it from `package.json`:
+
+```json
+{
+  "name": "my-plugin",
+  "version": "1.0.0",
+  "main": "main.js",
+  "obsidian": {
+    "minAppVersion": "1.0.0"
+  }
+}
+```
+
+Generates:
+```json
+{
+  "id": "my-plugin",
+  "name": "My Plugin",
+  "version": "1.0.0",
+  "minAppVersion": "1.0.0",
+  "main": "main.js"
+}
+```
+
+### Shared Package Management
+
+BRAT automatically detects shared packages used by monorepo plugins:
+
+1. **Detection**: Scans `package.json` dependencies for local references
+   - `file:` protocol dependencies
+   - Relative path dependencies (`./` or `../`)
+
+2. **Tracking**: Maintains a list of shared packages with:
+   - Package name and version
+   - Path location
+   - List of plugins using it
+
+3. **Conflict Detection**: Warns when multiple plugins use different versions of the same shared package
+
+4. **Validation**: Checks that shared packages are accessible before installation
+
+### Monorepo Best Practices
+
+1. **Use consistent versions**: Ensure all plugins using the same shared package reference the same version
+2. **Keep paths relative**: Use relative paths for better portability
+3. **Document dependencies**: Clearly document which plugins depend on shared packages
+4. **Test thoroughly**: Shared package changes can affect multiple plugins
+
+### Troubleshooting
+
+**Plugin not detected**: Ensure the path contains both `main.js` and either `manifest.json` or `package.json`
+
+**Shared package warnings**: Check version conflicts in package.json files
+
+**Path issues**: Verify monorepo base path is correctly configured in settings
+
+> [!IMPORTANT]
+> Monorepo support requires the plugin files to be within your Obsidian vault for security reasons. External paths will not work.
+
+> [!NOTE]
+> Removing a plugin or theme from BRAT tracking does not uninstall it from your vault.
 > Remove installed plugins from Settings > Community plugins and installed themes from Settings > Appearance.

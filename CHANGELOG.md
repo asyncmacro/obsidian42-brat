@@ -1,5 +1,22 @@
 # Changelog
 
+## [Unreleased]
+
+### Features
+
+* ✨ Add monorepo support for local plugin development ([monorepo-support])
+  - Install plugins directly from local monorepo paths (`./packages/my-plugin`)
+  - Automatic manifest generation from `package.json` when `manifest.json` is missing
+  - Shared package detection and tracking across multiple plugins
+  - Version conflict detection for shared dependencies
+  - Monorepo base path configuration in settings
+  - New settings UI section for monorepo configuration
+
+### Documentation
+
+* 📚 Add comprehensive monorepo support documentation to developer guide
+* 📚 Update README with monorepo feature announcement
+
 ## [1.2.0](https://github.com/TfTHacker/obsidian42-brat/compare/1.1.7...1.2.0) (2025-08-10)
 
 ### Features
