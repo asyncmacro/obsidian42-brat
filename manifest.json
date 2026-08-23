@@ -1,14 +1,14 @@
 {
-    "id": "obsidian42-brat",
-    "name": "BRAT",
+    "id": "obsidian-beta-reviewer",
+    "name": "Beta Reviewer Auto-Updater",
     "version": "2.2.0",
     "minAppVersion": "1.11.4",
     "description": "Easily install plugin beta versions for testing.",
-    "author": "TfTHacker",
-    "authorUrl": "https://github.com/TfTHacker",
-    "helpUrl": "https://tfthacker.com/BRAT",
+    "author": "Kareem",
+    "authorUrl": "https://github.com/asyncmacro",
+    "helpUrl": "https://github.com/asyncmacro/obsidian-beta-reviewer",
     "isDesktopOnly": false,
     "fundingUrl": {
-        "Visit my site": "https://tfthacker.com"
+        "Visit my site": "https://github.com/asyncmacro"
     }
 }

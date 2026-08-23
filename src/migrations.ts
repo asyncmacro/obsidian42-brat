@@ -15,7 +15,7 @@ const MIGRATION_LOG_KEY = "brat-migrations";
  */
 async function hasMigrationRun(app: App, migrationId: string): Promise<boolean> {
 	try {
-		const logData = await app.vault.adapter.read(`${app.vault.configDir}/plugins/obsidian42-brat/${MIGRATION_LOG_KEY}.json`);
+		const logData = await app.vault.adapter.read(`${app.vault.configDir}/plugins/obsidian-beta-reviewer/${MIGRATION_LOG_KEY}.json`);
 		const log = JSON.parse(logData) as MigrationLog;
 		return log.appliedMigrations.includes(migrationId);
 	} catch {
@@ -28,7 +28,7 @@ async function hasMigrationRun(app: App, migrationId: string): Promise<boolean> 
  */
 async function markMigrationComplete(app: App, migrationId: string): Promise<void> {
 	try {
-		const logPath = `${app.vault.configDir}/plugins/obsidian42-brat/${MIGRATION_LOG_KEY}.json`;
+		const logPath = `${app.vault.configDir}/plugins/obsidian-beta-reviewer/${MIGRATION_LOG_KEY}.json`;
 		let log: MigrationLog = { appliedMigrations: [] };
 
 		try {
