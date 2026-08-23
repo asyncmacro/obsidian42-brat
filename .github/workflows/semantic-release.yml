@@ -8,6 +8,8 @@ on:
 
 permissions:
   contents: read
+  attestations: write
+  id-token: write
 
 jobs:
   release:
@@ -17,6 +19,7 @@ jobs:
       issues: write
       pull-requests: write
       id-token: write
+      attestations: write
     steps:
       - name: Checkout
         uses: actions/checkout@v5
